@@ -5,7 +5,7 @@
     <div class="overlay"></div>
     <div class="container mx-auto text-center z-10">
         <h2 class="text-4xl text-white font-bold mb-4">Find Your Dream Job</h2>
-        <form class="mb-4 block mx-5 md:mx-auto">
+        <form class="mb-4 block mx-5 md:mx-auto" method="GET" action="index.php">
             <input type="text" name="keywords" placeholder="Keywords" class="w-full md:w-auto mb-2 px-4 py-2 focus:outline-none" />
             <input type="text" name="location" placeholder="Location" class="w-full md:w-auto mb-2 px-4 py-2 focus:outline-none" />
             <button class="w-full md:w-auto bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 focus:outline-none">
@@ -31,7 +31,26 @@
             <?php
             include 'config.php';
 
-            $stmt = $pdo->query("SELECT * FROM jobs ORDER BY created_at DESC LIMIT 6");
+            $keywords = isset($_GET['keywords']) ? $_GET['keywords'] : '';
+            $location = isset($_GET['location']) ? $_GET['location'] : '';
+
+            $query = "SELECT * FROM jobs WHERE 1";
+            $params = [];
+
+            if (!empty($keywords)) {
+                $query .= " AND (title LIKE :keywords OR description LIKE :keywords)";
+                $params['keywords'] = '%' . $keywords . '%';
+            }
+
+            if (!empty($location)) {
+                $query .= " AND location LIKE :location";
+                $params['location'] = '%' . $location . '%';
+            }
+
+            $query .= " ORDER BY created_at DESC LIMIT 6";
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($params);
+
             while ($job = $stmt->fetch()) {
                 echo '<div class="rounded-lg shadow-md bg-white">
                         <div class="p-4">

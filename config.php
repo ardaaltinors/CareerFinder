@@ -28,6 +28,16 @@ try {
         creator_email TEXT NOT NULL,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP
     )");
+    $pdo->exec("CREATE TABLE IF NOT EXISTS applications (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        job_id INTEGER NOT NULL,
+        applicant_name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        cover_letter TEXT NOT NULL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (job_id) REFERENCES jobs(id)
+    )");
 } catch (PDOException $e) {
     echo 'Connection failed: ' . $e->getMessage();
 }

@@ -28,13 +28,15 @@ if ($jobId) {
                 Back To Listings
             </a>
             <div class="flex space-x-4 ml-4">
-                <a href="edit-job.php?id=<?php echo $jobId; ?>" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded">Edit</a>
-                <!-- Delete Form -->
-                <form method="POST" action="delete.php">
-                    <input type="hidden" name="id" value="<?php echo $jobId; ?>">
-                    <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded">Delete</button>
-                </form>
-                <!-- End Delete Form -->
+                <?php if (isset($_SESSION['user']) && $_SESSION['user'] === $job['creator_email']) : ?>
+                    <a href="edit.php?id=<?php echo $jobId; ?>" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded">Edit</a>
+                    <!-- Delete Form -->
+                    <form method="POST" action="delete.php">
+                        <input type="hidden" name="id" value="<?php echo $jobId; ?>">
+                        <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded">Delete</button>
+                    </form>
+                    <!-- End Delete Form -->
+                <?php endif; ?>
             </div>
         </div>
         <div class="p-4">
@@ -60,7 +62,6 @@ if ($jobId) {
         <h3 class="text-lg font-semibold mt-4 mb-2 text-blue-500">Benefits</h3>
         <p><?php echo htmlspecialchars($job['benefits']); ?></p>
     </div>
-    <p class="my-5">Put "Job Application" as the subject of your email and attach your resume.</p>
     <a href="apply.php?id=<?php echo $jobId; ?>" class="block w-full text-center px-5 py-2.5 shadow-sm rounded border text-base font-medium cursor-pointer text-indigo-700 bg-indigo-100 hover:bg-indigo-200">
         Apply Now
     </a>
