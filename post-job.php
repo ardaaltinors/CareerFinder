@@ -1,27 +1,31 @@
 <?php include 'templates/header.php'; ?>
 
 <?php
-include 'data/jobs.php';
+include 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $newJobId = count($jobs) + 1;
-    $jobs[$newJobId] = [
-        "title" => $_POST['title'],
-        "salary" => $_POST['salary'],
-        "location" => $_POST['city'] . ', ' . $_POST['state'],
-        "type" => 'Local', // or some logic to determine this based on input
-        "tags" => explode(',', $_POST['tags']), // assuming tags input as comma-separated
-        "requirements" => $_POST['requirements'],
-        "benefits" => $_POST['benefits'],
-        "description" => $_POST['description'],
-        "contact" => $_POST['email']
-    ];
-
-    // Save the new job to a file or database
-    // Here we simulate saving to a file
-    file_put_contents('data/jobs.php', '<?php $jobs = ' . var_export($jobs, true) . ';');
-
-    echo '<div class="bg-green-100 p-3 my-3">Job listing created successfully.</div>';
+    try {
+        $stmt = $pdo->prepare("INSERT INTO jobs (title, description, salary, location, type, tags, requirements, benefits, company, address, city, state, phone, email) VALUES (:title, :description, :salary, :location, :type, :tags, :requirements, :benefits, :company, :address, :city, :state, :phone, :email)");
+        $stmt->execute([
+            'title' => $_POST['title'],
+            'description' => $_POST['description'],
+            'salary' => $_POST['salary'],
+            'location' => $_POST['city'] . ', ' . $_POST['state'],
+            'type' => 'Local', // Or some logic to determine this based on input
+            'tags' => $_POST['tags'],
+            'requirements' => $_POST['requirements'],
+            'benefits' => $_POST['benefits'],
+            'company' => $_POST['company'],
+            'address' => $_POST['address'],
+            'city' => $_POST['city'],
+            'state' => $_POST['state'],
+            'phone' => $_POST['phone'],
+            'email' => $_POST['email']
+        ]);
+        echo '<div class="bg-green-100 p-3 my-3">Job listing created successfully.</div>';
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
 }
 ?>
 
@@ -69,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <input type="email" name="email" placeholder="Email Address For Applications" class="w-full px-4 py-2 border rounded focus:outline-none" required />
             </div>
             <button class="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 my-3 rounded focus:outline-none">Save</button>
-            <a href="/" class="block text-center w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded focus:outline-none">Cancel</a>
+            <a href="index.php" class="block text-center w-full bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded focus:outline-none">Cancel</a>
         </form>
     </div>
 </section>
