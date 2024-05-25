@@ -22,6 +22,7 @@ session_start();
             </h1>
             <nav class="space-x-4">
                 <?php if (isset($_SESSION['user'])) : ?>
+                    <span>Welcome, <?php echo htmlspecialchars($_SESSION['user']); ?></span>
                     <a href="logout.php" class="text-white hover:underline">Logout</a>
                 <?php else : ?>
                     <a href="login.php" class="text-white hover:underline">Login</a>

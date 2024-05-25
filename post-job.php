@@ -4,14 +4,17 @@
 include 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    session_start();
+    $creator_email = $_SESSION['user']; // Get the logged-in user's email
+
     try {
-        $stmt = $pdo->prepare("INSERT INTO jobs (title, description, salary, location, type, tags, requirements, benefits, company, address, city, state, phone, email) VALUES (:title, :description, :salary, :location, :type, :tags, :requirements, :benefits, :company, :address, :city, :state, :phone, :email)");
+        $stmt = $pdo->prepare("INSERT INTO jobs (title, description, salary, location, type, tags, requirements, benefits, company, address, city, state, phone, email, creator_email) VALUES (:title, :description, :salary, :location, :type, :tags, :requirements, :benefits, :company, :address, :city, :state, :phone, :email, :creator_email)");
         $stmt->execute([
             'title' => $_POST['title'],
             'description' => $_POST['description'],
             'salary' => $_POST['salary'],
             'location' => $_POST['city'] . ', ' . $_POST['state'],
-            'type' => 'Local', // Or some logic to determine this based on input
+            'type' => 'Local',
             'tags' => $_POST['tags'],
             'requirements' => $_POST['requirements'],
             'benefits' => $_POST['benefits'],
@@ -20,7 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'city' => $_POST['city'],
             'state' => $_POST['state'],
             'phone' => $_POST['phone'],
-            'email' => $_POST['email']
+            'email' => $_POST['email'],
+            'creator_email' => $creator_email
         ]);
         echo '<div class="bg-green-100 p-3 my-3">Job listing created successfully.</div>';
     } catch (PDOException $e) {

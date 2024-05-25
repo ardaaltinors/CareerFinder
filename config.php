@@ -25,6 +25,7 @@ try {
         state TEXT NOT NULL,
         phone TEXT NOT NULL,
         email TEXT NOT NULL,
+        creator_email TEXT NOT NULL,
         created_at TEXT DEFAULT CURRENT_TIMESTAMP
     )");
 } catch (PDOException $e) {
