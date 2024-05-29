@@ -69,7 +69,7 @@
             }
             ?>
         </div>
-        <a href="listings.php" class="block text-xl text-center">
+        <a href="listings.php" class="block text-xl text3-center">
             <i class="fa fa-arrow-alt-circle-right"></i> Show All Jobs
         </a>
     </div>
